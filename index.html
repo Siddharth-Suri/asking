@@ -1,95 +1,821 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Valentines Day</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    .gradient-background {
-      background: rgb(255, 208, 229);
-      background: linear-gradient(180deg, rgba(255, 208, 229, 1) 0%, rgba(255, 232, 242, 1) 36%, rgba(255, 255, 255, 1) 100%);
-    }
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Asking Amen out</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap"
+            rel="stylesheet"
+        />
 
-    .bounce2 {
-      animation: bounce2 2s ease infinite;
-    }
+        <style>
+            body,
+            button,
+            h2 {
+                font-family: "JetBrains Mono", system-ui, sans-serif;
+                overflow-x: hidden;
+            }
 
-    @keyframes bounce2 {
-      0%, 20%, 50%, 80%, 100% {
-        transform: translateY(0);
-      }
-      40% {
-        transform: translateY(-20px);
-      }
-      60% {
-        transform: translateY(-10px);
-      }
-    }
-  </style>
-</head>
-<body class="gradient-background">
-  <div class="flex items-center justify-center h-screen">
-    <div class="flex flex-col items-center p-4">
-      <img id="imageDisplay" src="./images/image1.gif" alt="Cute kitten with flowers" class="rounded-md h-[300px]" style="object-fit: cover;" />
-      <h2 id="valentineQuestion" class="text-4xl font-bold italic text-[#bd1e59] my-4">Will you be my Valentine?</h2>
-      <div class="flex gap-4 pt-[20px] items-center" id="responseButtons">
-        <button id="yesButton"
-          class="bounce2 inline-flex items-center justify-center whitespace-nowrap rounded-md text-[20px] font-medium disabled:pointer-events-none disabled:opacity-50 hover:bg-green-400 min-h-12 min-w-[75px] px-4 py-2 bg-green-500 text-white transition">
-          Yes
-        </button>
-        <button id="noButton"
-          class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-[20px] font-medium transition disabled:pointer-events-none disabled:opacity-50 hover:bg-red-700 h-12 min-w-[75px] w-auto px-4 py-2 bg-red-500 text-white">
-          No
-        </button>
-      </div>
-    </div>
-  </div>
+            /* Heart particles background */
+            #hearts-container {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                z-index: -1;
+                background: linear-gradient(
+                    -45deg,
+                    #f5deb3,
+                    #ecdcc3,
+                    #f0e6d2,
+                    #e6d0b1
+                );
+                background-size: 400% 400%;
+                animation: gradient 20s ease infinite;
+                overflow: hidden;
+            }
 
-  <script type="module">
-    import confetti from 'https://cdn.skypack.dev/canvas-confetti';
-    const yesButton = document.getElementById('yesButton');
-    const noButton = document.getElementById('noButton');
-    const imageDisplay = document.getElementById('imageDisplay');
-    const valentineQuestion = document.getElementById('valentineQuestion');
-    const responseButtons = document.getElementById('responseButtons');
-  
-    let noClickCount = 0;
-    let buttonHeight = 48; // Starting height in pixels
-    let buttonWidth = 80;
-    let fontSize = 20; // Starting font size in pixels
-    const imagePaths = [
-      "./images/image1.gif",
-      "./images/image2.gif",
-      "./images/image3.gif",
-      "./images/image4.gif",
-      "./images/image5.gif",
-      "./images/image6.gif",
-      "./images/image7.gif"
-    ];
-  
-    noButton.addEventListener('click', function() {
-      if (noClickCount < 5) {
-        noClickCount++;
-        imageDisplay.src = imagePaths[noClickCount];
-        buttonHeight += 35; // Increase height by 5px on each click
-        buttonWidth += 35;
-        fontSize += 25; // Increase font size by 1px on each click
-        yesButton.style.height = `${buttonHeight}px`; // Update button height
-        yesButton.style.width = `${buttonWidth}px`;
-        yesButton.style.fontSize = `${fontSize}px`; // Update font size
-        if (noClickCount < 6) {
-          noButton.textContent = ["No", "Are you sure?", "Pookie please", "Don't do this to me :(", "You're breaking my heart", "I'm gonna cry..."][noClickCount];
-        }
-      }
-    });
-  
-    yesButton.addEventListener('click', () => {
-      imageDisplay.src = './images/image7.gif'; // Change to image7.gif
-      valentineQuestion.textContent = "Yayyy!! :3"; // Change the question text
-      responseButtons.style.display = 'none'; // Hide both buttons
-      confetti(); // Trigger confetti animation
-    });
-  </script>  
-</body>
+            .heart {
+                position: absolute;
+                width: 20px;
+                height: 20px;
+                opacity: 0;
+                pointer-events: none;
+                background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ff4081'%3E%3Cpath d='M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z'/%3E%3C/svg%3E");
+                background-size: contain;
+                background-repeat: no-repeat;
+                animation: floatUp 6s linear forwards;
+            }
+
+            @keyframes floatUp {
+                0% {
+                    transform: translateY(100vh) scale(0.5) rotate(0deg);
+                    opacity: 0;
+                }
+                10% {
+                    opacity: 0.8;
+                }
+                80% {
+                    opacity: 0.8;
+                }
+                100% {
+                    transform: translateY(-20vh) scale(1.2) rotate(15deg);
+                    opacity: 0;
+                }
+            }
+
+            @keyframes gradient {
+                0% {
+                    background-position: 0% 50%;
+                }
+                50% {
+                    background-position: 100% 50%;
+                }
+                100% {
+                    background-position: 0% 50%;
+                }
+            }
+
+            .bounce2 {
+                animation: bounce2 2s ease infinite;
+            }
+
+            @keyframes bounce2 {
+                0%,
+                20%,
+                50%,
+                80%,
+                100% {
+                    transform: translateY(0);
+                }
+                40% {
+                    transform: translateY(-20px);
+                }
+                60% {
+                    transform: translateY(-10px);
+                }
+            }
+
+            /* Blink animation for Yes button */
+            .blink-attention {
+                animation: blinkAttention 1.5s ease-in-out infinite;
+            }
+
+            @keyframes blinkAttention {
+                0%,
+                100% {
+                    box-shadow: 0 0 8px 4px rgba(72, 187, 120, 0.5);
+                }
+                50% {
+                    box-shadow: 0 0 20px 8px rgba(72, 187, 120, 0.8);
+                }
+            }
+
+            /* Enhanced transitions */
+            .fade-scale {
+                transition: transform 0.8s ease, opacity 0.8s ease;
+            }
+
+            .fade-in {
+                animation: fadeIn 1s ease-in;
+            }
+
+            @keyframes fadeIn {
+                from {
+                    opacity: 0;
+                }
+                to {
+                    opacity: 1;
+                }
+            }
+
+            .slide-up {
+                animation: slideUp 0.5s ease-out;
+            }
+
+            @keyframes slideUp {
+                from {
+                    transform: translateY(20px);
+                    opacity: 0;
+                }
+                to {
+                    transform: translateY(0);
+                    opacity: 1;
+                }
+            }
+
+            /* Enhanced button styles */
+            .button-shadow {
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+                transition: all 0.3s ease;
+            }
+
+            .button-shadow:hover {
+                box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+                transform: translateY(-2px);
+            }
+
+            /* Sparkle effect */
+            .sparkle {
+                position: absolute;
+                width: 5px;
+                height: 5px;
+                background-color: white;
+                border-radius: 50%;
+                filter: blur(1px);
+                opacity: 0;
+                pointer-events: none;
+                animation: sparkle 2s linear forwards;
+            }
+
+            @keyframes sparkle {
+                0% {
+                    transform: scale(0);
+                    opacity: 0;
+                }
+                20% {
+                    transform: scale(1.2);
+                    opacity: 1;
+                }
+                100% {
+                    transform: scale(0);
+                    opacity: 0;
+                }
+            }
+
+            /* Scattering hearts on hover */
+            .scatter-hearts {
+                position: relative;
+                overflow: visible;
+            }
+
+            /* Responsive styles */
+            @media (max-width: 640px) {
+                .content-container {
+                    width: 90%;
+                    padding: 1rem;
+                }
+
+                #imageDisplay {
+                    height: 250px !important;
+                }
+
+                #valentineQuestion {
+                    font-size: 1.75rem;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div id="hearts-container"></div>
+        <div class="flex items-center justify-center min-h-screen px-4 py-8">
+            <div
+                class="flex flex-col items-center p-6 bg-white bg-opacity-80 rounded-lg shadow-xl content-container fade-in relative"
+                style="
+                    overflow: visible;
+                    box-shadow: 0 0 25px rgba(255, 105, 180, 0.3);
+                "
+            >
+                <div class="relative">
+                    <img
+                        id="imageDisplay"
+                        src="./images/image1.gif"
+                        alt="Cute kitten with flowers"
+                        class="rounded-md h-[300px] fade-scale"
+                        style="
+                            object-fit: cover;
+                            transition: all 0.8s
+                                cubic-bezier(0.34, 1.56, 0.64, 1);
+                        "
+                    />
+                    <div
+                        id="sparkleContainer"
+                        class="absolute inset-0 pointer-events-none"
+                    ></div>
+                </div>
+                <h2
+                    id="valentineQuestion"
+                    class="text-4xl font-bold text-[#bd1e59] my-4 text-center slide-up scatter-hearts"
+                >
+                    Amen Merhiu Rhakho
+                    <br />
+                    <br />
+                    Will you be my Girlfriend?
+                </h2>
+                <div
+                    class="flex gap-4 pt-[20px] items-center"
+                    id="responseButtons"
+                >
+                    <button
+                        id="yesButton"
+                        class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-[20px] font-medium disabled:pointer-events-none disabled:opacity-50 hover:bg-green-400 min-h-12 min-w-[75px] px-4 py-2 bg-green-500 text-white transition-all duration-300 button-shadow scatter-hearts"
+                    >
+                        Yes
+                    </button>
+                    <button
+                        id="noButton"
+                        class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-[20px] font-medium transition-all duration-300 disabled:pointer-events-none disabled:opacity-50 hover:bg-red-700 h-12 min-w-[75px] w-auto px-4 py-2 bg-red-500 text-white button-shadow"
+                    >
+                        No
+                    </button>
+                </div>
+                <div
+                    id="messageDisplay"
+                    class="mt-4 text-center text-xl text-[#bd1e59] font-bold opacity-0"
+                    style="transition: opacity 0.5s ease"
+                >
+                    okayy you are my girlfriendddd from now :33333
+                </div>
+            </div>
+        </div>
+
+        <script type="module">
+            import confetti from "https://cdn.skypack.dev/canvas-confetti";
+            const yesButton = document.getElementById("yesButton");
+            const noButton = document.getElementById("noButton");
+            const imageDisplay = document.getElementById("imageDisplay");
+            const valentineQuestion =
+                document.getElementById("valentineQuestion");
+            const responseButtons = document.getElementById("responseButtons");
+            const heartsContainer = document.getElementById("hearts-container");
+            const sparkleContainer =
+                document.getElementById("sparkleContainer");
+            const messageDisplay = document.getElementById("messageDisplay");
+
+            let noClickCount = 0;
+            let buttonHeight = 48; // Starting height in pixels
+            let buttonWidth = 80;
+            let fontSize = 20; // Starting font size in pixels
+            let noButtonMovingEnabled = false;
+            let lastMousePosition = {
+                x: window.innerWidth / 2,
+                y: window.innerHeight / 2,
+            };
+
+            const imagePaths = [
+                "./images/image1.gif",
+                "./images/image2.gif",
+                "./images/image3.gif",
+                "./images/image4.gif",
+                "./images/image5.gif",
+                "./images/image6.gif",
+                "./images/image7.gif",
+            ];
+
+            const successMessages = [
+                "Yipeee you are mine , my girlfrinendd now okokoayy :33333",
+            ];
+
+            // Hearts background - with significantly more hearts
+            function createHeart() {
+                const heart = document.createElement("div");
+                heart.classList.add("heart");
+
+                // Random size with larger variation
+                const size = Math.random() * 30 + 10;
+                heart.style.width = `${size}px`;
+                heart.style.height = `${size}px`;
+
+                // Random starting position
+                const startPosX = Math.random() * window.innerWidth;
+                heart.style.left = `${startPosX}px`;
+                heart.style.bottom = "-50px";
+
+                // Random speed with longer duration for smoother motion
+                const duration = Math.random() * 4 + 4;
+                heart.style.animationDuration = `${duration}s`;
+
+                // Random delay
+                const delay = Math.random() * 2;
+                heart.style.animationDelay = `${delay}s`;
+
+                // Random color variation with warmer tones
+                const colors = [
+                    "#ff4081", // Pink
+                    "#e91e63", // Deep pink
+                    "#d81b60", // Dark pink
+                    "#f06292", // Light pink
+                    "#ec407a", // Medium pink
+                    "#ff6b6b", // Coral
+                    "#ff8a8a", // Light coral
+                    "#ff7043", // Deep orange
+                ];
+                const randomColor =
+                    colors[Math.floor(Math.random() * colors.length)];
+
+                // Apply random color and rotation
+                heart.style.filter = `hue-rotate(${
+                    Math.random() * 30 - 15
+                }deg) brightness(${0.8 + Math.random() * 0.4})`;
+                heart.style.transform = `rotate(${Math.random() * 30 - 15}deg)`;
+
+                heartsContainer.appendChild(heart);
+
+                // Random wiggle path
+                if (Math.random() > 0.5) {
+                    heart.style.animation = `floatUp ${duration}s ease-in-out forwards`;
+                }
+
+                // Remove heart from DOM after animation completes
+                setTimeout(() => {
+                    heart.remove();
+                }, (duration + delay) * 1000);
+            }
+
+            // Generate hearts periodically - much more frequently
+            function startHeartGeneration() {
+                // Generate 3 hearts every 150ms for a denser effect
+                setInterval(() => {
+                    for (let i = 0; i < 3; i++) {
+                        createHeart();
+                    }
+                }, 150);
+            }
+
+            // Start generating hearts
+            startHeartGeneration();
+
+            // Create sparkles around elements
+            function createSparkle(x, y) {
+                const sparkle = document.createElement("div");
+                sparkle.classList.add("sparkle");
+
+                // Random position near the provided coordinates
+                const offsetX = (Math.random() - 0.5) * 80;
+                const offsetY = (Math.random() - 0.5) * 80;
+
+                sparkle.style.left = `${x + offsetX}px`;
+                sparkle.style.top = `${y + offsetY}px`;
+
+                // Random color - gold, silver, or pink
+                const colors = ["#FFD700", "#C0C0C0", "#FF69B4"];
+                sparkle.style.backgroundColor =
+                    colors[Math.floor(Math.random() * colors.length)];
+
+                // Random size
+                const size = Math.random() * 4 + 2;
+                sparkle.style.width = `${size}px`;
+                sparkle.style.height = `${size}px`;
+
+                // Add to container
+                sparkleContainer.appendChild(sparkle);
+
+                // Remove after animation completes
+                setTimeout(() => {
+                    sparkle.remove();
+                }, 2000);
+            }
+
+            // Add sparkle effect to elements with scatter-hearts class
+            document.querySelectorAll(".scatter-hearts").forEach((element) => {
+                element.addEventListener("mouseenter", () => {
+                    // Get element position
+                    const rect = element.getBoundingClientRect();
+                    const centerX = rect.left + rect.width / 2;
+                    const centerY = rect.top + rect.height / 2;
+
+                    // Create multiple sparkles
+                    for (let i = 0; i < 10; i++) {
+                        setTimeout(() => {
+                            createSparkle(centerX, centerY);
+                        }, i * 100);
+                    }
+
+                    // Create small burst of hearts
+                    for (let i = 0; i < 5; i++) {
+                        setTimeout(createHeart, i * 100);
+                    }
+                });
+            });
+
+            // Track mouse movement to direct hearts
+            document.addEventListener("mousemove", (e) => {
+                lastMousePosition = { x: e.clientX, y: e.clientY };
+
+                // Random chance to create heart at mouse position
+                if (Math.random() < 0.05) {
+                    const heart = document.createElement("div");
+                    heart.classList.add("heart");
+
+                    const size = Math.random() * 20 + 10;
+                    heart.style.width = `${size}px`;
+                    heart.style.height = `${size}px`;
+
+                    heart.style.left = `${e.clientX}px`;
+                    heart.style.top = `${e.clientY}px`;
+
+                    const duration = Math.random() * 3 + 2;
+                    heart.style.animationDuration = `${duration}s`;
+
+                    heart.style.opacity = "0.8"; // Start visible
+
+                    heartsContainer.appendChild(heart);
+
+                    setTimeout(() => {
+                        heart.remove();
+                    }, duration * 1000);
+                }
+            });
+
+            // Function to move the No button with enhanced evasion
+            function moveNoButton() {
+                if (!noButtonMovingEnabled) return;
+
+                const viewportWidth = window.innerWidth;
+                const viewportHeight = window.innerHeight;
+
+                // Calculate button dimensions
+                const buttonWidth = noButton.offsetWidth;
+                const buttonHeight = noButton.offsetHeight;
+
+                // Calculate maximum positions (keeping button fully visible)
+                const maxX = viewportWidth - buttonWidth - 20;
+                const maxY = viewportHeight - buttonHeight - 20;
+
+                // Get mouse position to move away from it
+                const mouseX = lastMousePosition.x;
+                const mouseY = lastMousePosition.y;
+
+                // Calculate position furthest from mouse
+                let randomX, randomY;
+
+                // If mouse is on left side, move button to right side and vice versa
+                if (mouseX < viewportWidth / 2) {
+                    randomX = Math.max(
+                        20,
+                        Math.floor(
+                            Math.random() * (maxX - viewportWidth / 2) +
+                                viewportWidth / 2
+                        )
+                    );
+                } else {
+                    randomX = Math.max(
+                        20,
+                        Math.floor(Math.random() * (viewportWidth / 2 - 20))
+                    );
+                }
+
+                // Same for vertical position
+                if (mouseY < viewportHeight / 2) {
+                    randomY = Math.max(
+                        20,
+                        Math.floor(
+                            Math.random() * (maxY - viewportHeight / 2) +
+                                viewportHeight / 2
+                        )
+                    );
+                } else {
+                    randomY = Math.max(
+                        20,
+                        Math.floor(Math.random() * (viewportHeight / 2 - 20))
+                    );
+                }
+
+                // Apply fixed positioning with smoother transition
+                noButton.style.position = "fixed";
+                noButton.style.transition =
+                    "left 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), top 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), transform 0.3s ease";
+                noButton.style.left = `${randomX}px`;
+                noButton.style.top = `${randomY}px`;
+                noButton.style.zIndex = "1000";
+
+                // Add a slight scale effect when moving
+                noButton.style.transform = "scale(0.95)";
+                setTimeout(() => {
+                    noButton.style.transform = "scale(1)";
+                }, 300);
+            }
+
+            // Add enhanced transition effect to image changes
+            function changeImage(index) {
+                // Store original transform values
+                const originalTransform = imageDisplay.style.transform;
+
+                // Fade out with transition
+                imageDisplay.style.opacity = "0";
+                imageDisplay.style.transform = "scale(0.95)";
+
+                // Show random message
+                if (index > 0) {
+                    messageDisplay.textContent = [
+                        "wtf you misclicked ",
+                        "areyy yes bol chup chap ",
+                        "areyy sorry what did i dooo???",
+                        "arey please naaa ",
+                        "now you dont have a choice",
+                    ][index - 1];
+                    messageDisplay.style.opacity = "1";
+                }
+
+                setTimeout(() => {
+                    // Change image when faded out
+                    imageDisplay.src = imagePaths[index];
+
+                    // Restore transform and fade in
+                    setTimeout(() => {
+                        imageDisplay.style.opacity = "1";
+                        imageDisplay.style.transform = "scale(1)";
+                    }, 50);
+                }, 600);
+            }
+
+            // Helper function to enhance Yes button appearance after each No click
+            function enhanceYesButton(clickCount) {
+                // First, set the base styles with transition
+                yesButton.style.transition =
+                    "height 0.6s ease, width 0.6s ease, font-size 0.6s ease, box-shadow 0.6s ease, background-color 0.6s ease";
+                yesButton.style.height = `${buttonHeight}px`;
+                yesButton.style.width = `${buttonWidth}px`;
+                yesButton.style.fontSize = `${fontSize}px`;
+
+                // Add increasing levels of attention based on click count
+                switch (clickCount) {
+                    case 1:
+                        // Slightly more prominent
+                        yesButton.classList.add("button-shadow");
+                        yesButton.style.fontWeight = "bold";
+                        break;
+                    case 2:
+                        // Brighter color
+                        yesButton.style.backgroundColor = "#38a169";
+                        // Add subtle pulse
+                        yesButton.style.animation = "pulse 1.5s infinite";
+                        break;
+                    case 3:
+                        // Add a faint glow
+                        yesButton.style.boxShadow =
+                            "0 0 8px 4px rgba(72, 187, 120, 0.5)";
+                        break;
+                    case 4:
+                        // Stronger glow
+                        yesButton.style.boxShadow =
+                            "0 0 14px 6px rgba(72, 187, 120, 0.6)";
+                        break;
+                    case 5:
+                        // Add blinking animation and make it super obvious
+                        yesButton.classList.add("blink-attention");
+                        yesButton.style.backgroundColor = "#2f855a";
+                        yesButton.style.fontWeight = "800";
+                        // Add a small bounce animation
+                        yesButton.classList.add("bounce2");
+                        break;
+                }
+            }
+
+            noButton.addEventListener("click", function () {
+                if (noClickCount < 5) {
+                    noClickCount++;
+                    changeImage(noClickCount);
+
+                    // Apply smoother transition to Yes button growth
+                    buttonHeight += 35; // Increase height
+                    buttonWidth += 35; // Increase width
+                    fontSize += 25; // Increase font size
+
+                    // Enhance Yes button appearance
+                    enhanceYesButton(noClickCount);
+
+                    if (noClickCount < 6) {
+                        noButton.textContent = [
+                            "No",
+                            "Pleaseee reconsider",
+                            "AREYYYY sorry what ",
+                            "areyy please na :')",
+                            " you are killing me ",
+                            "i lost, it is so over ",
+                        ][noClickCount];
+                    }
+
+                    // Create small burst of hearts on click
+                    for (let i = 0; i < 10; i++) {
+                        setTimeout(createHeart, i * 100);
+                    }
+
+                    // Enable No button moving when it reaches image 6 (after 5 clicks)
+                    if (noClickCount === 5) {
+                        noButtonMovingEnabled = true;
+
+                        // Immediately move the button a bit to show it's now movable
+                        setTimeout(() => {
+                            moveNoButton();
+
+                            // Add the mouseover event listener
+                            noButton.addEventListener(
+                                "mouseover",
+                                moveNoButton
+                            );
+
+                            // Also check on mouse movement to fix the edge case
+                            document.addEventListener(
+                                "mousemove",
+                                function (e) {
+                                    if (!noButtonMovingEnabled) return;
+
+                                    // Check if mouse is approaching the button
+                                    const rect =
+                                        noButton.getBoundingClientRect();
+                                    const buffer = 70; // Larger detection area around button
+                                    if (
+                                        e.clientX >= rect.left - buffer &&
+                                        e.clientX <= rect.right + buffer &&
+                                        e.clientY >= rect.top - buffer &&
+                                        e.clientY <= rect.bottom + buffer
+                                    ) {
+                                        moveNoButton();
+                                    }
+                                }
+                            );
+                        }, 100);
+                    }
+                }
+            });
+
+            yesButton.addEventListener("click", () => {
+                // Special animation for success
+                imageDisplay.style.opacity = "0";
+                imageDisplay.style.transform = "scale(0.9)";
+
+                // Clear any message
+                messageDisplay.style.opacity = "0";
+
+                setTimeout(() => {
+                    imageDisplay.src = "./images/image7.gif";
+
+                    // More dramatic reveal for success image
+                    setTimeout(() => {
+                        imageDisplay.style.opacity = "1";
+                        imageDisplay.style.transform = "scale(1.05)";
+
+                        setTimeout(() => {
+                            imageDisplay.style.transform = "scale(1)";
+                        }, 300);
+                    }, 200);
+
+                    valentineQuestion.style.transition = "all 0.5s ease";
+                    valentineQuestion.textContent = "WOHOOOOOOOOOOO";
+
+                    // Show a random success message
+                    messageDisplay.textContent =
+                        successMessages[
+                            Math.floor(Math.random() * successMessages.length)
+                        ];
+                    setTimeout(() => {
+                        messageDisplay.style.opacity = "1";
+                    }, 800);
+
+                    // Extra hearts burst on success - MANY more hearts
+                    for (let i = 0; i < 100; i++) {
+                        setTimeout(createHeart, i * 50);
+                    }
+
+                    // Run multiple confetti bursts with more particles
+                    const duration = 8000;
+                    const animationEnd = Date.now() + duration;
+
+                    function frame() {
+                        confetti({
+                            particleCount: 8,
+                            angle: 60,
+                            spread: 70,
+                            origin: { x: 0.1, y: 0.6 },
+                            colors: [
+                                "#ff6b6b",
+                                "#ff8e8e",
+                                "#ff6b6b",
+                                "#e73c7e",
+                                "#ff4081",
+                            ],
+                        });
+                        confetti({
+                            particleCount: 8,
+                            angle: 120,
+                            spread: 70,
+                            origin: { x: 0.9, y: 0.6 },
+                            colors: [
+                                "#ff6b6b",
+                                "#ff8e8e",
+                                "#ff6b6b",
+                                "#e73c7e",
+                                "#ff4081",
+                            ],
+                        });
+
+                        // Add center burst
+                        if (Math.random() > 0.7) {
+                            confetti({
+                                particleCount: 10,
+                                angle: 90,
+                                spread: 360,
+                                origin: { x: 0.5, y: 0.5 },
+                                colors: [
+                                    "#ff6b6b",
+                                    "#ff8e8e",
+                                    "#ff6b6b",
+                                    "#e73c7e",
+                                    "#ff4081",
+                                    "#FFD700", // Gold
+                                ],
+                            });
+                        }
+
+                        if (Date.now() < animationEnd) {
+                            requestAnimationFrame(frame);
+                        }
+                    }
+
+                    frame();
+
+                    // Create sparkles around the image
+                    const rect = imageDisplay.getBoundingClientRect();
+                    for (let i = 0; i < 30; i++) {
+                        setTimeout(() => {
+                            createSparkle(
+                                rect.left + Math.random() * rect.width,
+                                rect.top + Math.random() * rect.height
+                            );
+                        }, i * 100);
+                    }
+
+                    // Fade out buttons
+                    responseButtons.style.transition = "opacity 0.5s ease";
+                    responseButtons.style.opacity = "0";
+                    setTimeout(() => {
+                        responseButtons.style.display = "none";
+                    }, 500);
+                }, 600);
+            });
+
+            // Make everything responsive
+            window.addEventListener("resize", function () {
+                // If No button is in random position mode and still visible
+                if (
+                    noButtonMovingEnabled &&
+                    noButton.style.position === "fixed"
+                ) {
+                    moveNoButton();
+                }
+            });
+
+            // Add sparkly cursor trail
+            document.addEventListener("mousemove", function (e) {
+                if (Math.random() > 0.9) {
+                    const sparkle = document.createElement("div");
+                    sparkle.classList.add("sparkle");
+                    sparkle.style.left = `${e.clientX}px`;
+                    sparkle.style.top = `${e.clientY}px`;
+
+                    document.body.appendChild(sparkle);
+
+                    setTimeout(() => {
+                        sparkle.remove();
+                    }, 2000);
+                }
+            });
+        </script>
+    </body>
 </html>
